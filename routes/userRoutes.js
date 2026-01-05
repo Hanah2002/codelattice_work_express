@@ -4,9 +4,6 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-/* ----------------------------------
-   1️⃣ STORE USER (Already working)
------------------------------------ */
 router.post("/users", async (req, res) => {
   try {
     const { name, email, age } = req.body;
@@ -25,26 +22,23 @@ router.post("/users", async (req, res) => {
   }
 });
 
-/* ----------------------------------
-   2️⃣ FETCH FROM EXTERNAL API & STORE
------------------------------------ */
 router.get("/users/fetch-external", async (req, res) => {
   try {
-    // 🔹 Fetch external API data
+  
     const response = await axios.get(
       "https://jsonplaceholder.typicode.com/users"
     );
 
     const externalUsers = response.data;
 
-    // 🔹 Map external data → your schema
+  
     const usersToSave = externalUsers.map((user) => ({
       name: user.name,
       email: user.email,
-      age: Math.floor(Math.random() * 20) + 20, // fake age
+      age: Math.floor(Math.random() * 20) + 20,
     }));
 
-    // 🔹 Store in MongoDB
+
     const savedUsers = await User.insertMany(usersToSave);
 
     res.status(200).json({
